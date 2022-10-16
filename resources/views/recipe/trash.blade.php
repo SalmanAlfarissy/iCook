@@ -26,6 +26,7 @@
                         <th>Title</th>
                         <th>Category Name</th>
                         <th>Content</th>
+                        <th>Image</th>
                         <th>Create_at</th>
                         <th>Action</th>
                     </tr>
@@ -71,12 +72,13 @@
                         {"data":"category.name"},
                         {"data":"title"},
                         {"data":"content"},
+                        {"data":"gambar"},
                         {"data":"created_at"},
                         {"data":"id"}
                     ],
                     "columnDefs":[
                         {
-                            "targets":5,
+                            "targets":6,
                             "data":"id",
                             "render":function(data, type, row){
                                 return '<div class="btn-group mb-1">'+
@@ -88,6 +90,23 @@
                                         '<button class="dropdown-item btn-delete" data-id="'+row.id+'">Delete</button>'+
                                     '</div>'+
                                 '</div>';
+                            },
+
+                        },
+                        {
+                            "targets":4,
+                            "data":"gambar",
+                            "render":function(data, type, row){
+                                return '<img src="{{ asset('image/content') }}/'+data+'" width="50" alt="">';
+                            },
+
+                        },
+                        {
+                            "targets":3,
+                            "data":"content",
+                            "render":function(data, type, row){
+                                return data.substring(0,200)+'...<a href="#" style="text-decoration: none; color:red;">Selanjutnya</a>';
+
                             },
 
                         },

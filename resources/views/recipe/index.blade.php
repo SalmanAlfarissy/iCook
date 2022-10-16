@@ -31,7 +31,8 @@
                         <th>Title</th>
                         <th>Category Name</th>
                         <th>Content</th>
-                        <th>Create_at</th>
+                        <th>Image</th>
+                        <th>Create At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -51,7 +52,7 @@
             </div>
             <div class="modal-body">
                 <div class="basic-form">
-                    <form method="POST" class="createForm">
+                    <form method="POST" id="createForm" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Title</label>
@@ -77,7 +78,7 @@
                             </div>
                         </div>
 
-                        {{-- <div class="mb-3 row">
+                        <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Image</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-3">
@@ -87,7 +88,7 @@
                                     <span class="input-group-text">Upload</span>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                     </form>
                 </div>
@@ -111,7 +112,7 @@
             </div>
             <div class="modal-body">
                 <div class="basic-form">
-                    <form method="POST" class="updateForm">
+                    <form method="POST" id="updateForm" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id">
                         <div class="mb-3 row">
@@ -134,11 +135,11 @@
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Content</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control" rows="4" name="content"></textarea>
+                                <textarea class="form-control" rows="4" id="content" name="content"></textarea>
                             </div>
                         </div>
 
-                        {{-- <div class="mb-3 row">
+                        <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Image</label>
                             <div class="col-sm-9">
                                 <div class="input-group mb-3">
@@ -147,8 +148,9 @@
                                     </div>
                                     <span class="input-group-text">Upload</span>
                                 </div>
+                                <img src="" id="gambar" width="70" alt="">
                             </div>
-                        </div> --}}
+                        </div>
 
                     </form>
                 </div>
@@ -164,8 +166,20 @@
 @endsection
 
 @push('custom-script')
-<!-- textarea -->
-<script src="{{ asset('admin/js/tinymce.min.js') }}" referrerpolicy="origin"></script>
+
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tinycomments tableofcontents footnotes mergetags autocorrect',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+      tinycomments_mode: 'embedded',
+      tinycomments_author: 'Author name',
+      mergetags_list: [
+        { value: 'First.Name', title: 'First Name' },
+        { value: 'Email', title: 'Email' },
+      ]
+    });
+  </script>
 
 <script>
 
@@ -195,12 +209,13 @@
                         {"data":"category.name"},
                         {"data":"title"},
                         {"data":"content"},
+                        {"data":"gambar"},
                         {"data":"created_at"},
                         {"data":"id"}
                     ],
                     "columnDefs":[
                         {
-                            "targets":5,
+                            "targets":6,
                             "data":"id",
                             "render":function(data, type, row){
                                 return '<div class="btn-group mb-1">'+
@@ -212,6 +227,22 @@
                                         '<button class="dropdown-item btn-delete" data-id="'+row.id+'">Delete</button>'+
                                     '</div>'+
                                 '</div>';
+                            },
+
+                        },
+                        {
+                            "targets":4,
+                            "data":"gambar",
+                            "render":function(data, type, row){
+                                return '<img src="{{ asset('image/content') }}/'+data+'" width="50" alt="">';
+                            },
+
+                        },
+                        {
+                            "targets":3,
+                            "data":"content",
+                            "render":function(data, type, row){
+                                return data.substring(0,200)+'...<a href="#" style="text-decoration: none; color:red;">Selanjutnya</a>';
                             },
 
                         },
@@ -228,12 +259,18 @@
 
     $(document).on('click','.save-data', function(e){
         e.preventDefault();
-        var form = $('.createForm');
+        tinyMCE.triggerSave();
+        let form = $('#createForm');
+        let formData = new FormData(form[0]);
 
         $.ajax({
             type: "POST",
             url: "/recipe/createData",
-            data: form.serialize(),
+            data: formData,
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false,
             success: function (result) {
                 $('#createModal').modal('hide');
                 swal("Proses Success!!", "Data category Berhasil di Tambahkan..", "success")
@@ -246,6 +283,7 @@
     });
 
     $(document).on('click', '.btn-edit', function(){
+        tinyMCE.triggerSave();
         $.ajax({
             type: "GET",
             url: "/recipe/getData",
@@ -253,11 +291,12 @@
                 id: $(this).data('id'),
             },
             success: function (result) {
-                var form = $('.updateForm');
+                var form = $('#updateForm');
                 form.find('input[name=id]').val(result.id);
                 form.find('input[name=title]').val(result.title);
                 form.find('select[name=category_id]').val(result.category_id);
-                form.find('textarea[name=content]').val(result.content);
+                tinymce.get('content').setContent(result.content);
+                $("#gambar").attr("src", "image/content/" + result.gambar);
                 $('#updateModal').modal('show');
             },
             error: function(err){
@@ -268,12 +307,18 @@
 
     $(document).on('click','.update-data', function(e){
         e.preventDefault();
-        var form = $('.updateForm');
+        tinyMCE.triggerSave()
+        var form = $('#updateForm');
+        var formData = new FormData(form[0]);
 
         $.ajax({
             type: "POST",
             url: "/recipe/updateData/"+form.find("input[name=id]").val(),
-            data: form.serialize(),
+            data: formData,
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false,
             success: function (result) {
                 $('#updateModal').modal('hide');
                 swal("Proses Success!!", "Data user Berhasil di Update..", "success")

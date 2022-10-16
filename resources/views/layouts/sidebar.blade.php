@@ -43,7 +43,7 @@
                 </a>
             </li>
 
-            <li class="{{ request()->is('recipe') ? 'mm-active' : '' }}"><a href="/recipe" class="ai-icon" aria-expanded="false">
+            <li class="{{ request()->is('recipe') || request()->is('recipe/trash') ? 'mm-active' : '' }}"><a href="/recipe" class="ai-icon" aria-expanded="false">
                 <i class="flaticon-381-list"></i>
                 <span class="nav-text">Recipe</span>
             </a>

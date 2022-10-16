@@ -32,6 +32,7 @@ class RecipeController extends Controller
             'title'=>'required',
             'category_id'=>'required',
             'content'=>'required',
+            'gambar'=>'mimes:png,jpg,jpeg|required',
         ]);
 
         $data = new Recipe();
@@ -39,13 +40,11 @@ class RecipeController extends Controller
         $data->category_id = $validate['category_id'];
         $data->content = $validate['content'];
 
-        // if (empty($validate['gambar'])){
-        //     $data->gambar = '';
-        // }else {
-        //     $file_name = time().rand().'.'.$validate['gambar']->getClientOriginalExtension();
-        //     $validate['gambar']->move(public_path().'/image/content',$file_name);
-        //     $data->gambar = $file_name;
-        // }
+        if (!empty($validate['gambar'])){
+            $file_name = time().rand().'.'.$validate['gambar']->getClientOriginalExtension();
+            $validate['gambar']->move(public_path().'/image/content',$file_name);
+            $data->gambar = $file_name;
+        }
 
         $data->save();
 
@@ -59,6 +58,8 @@ class RecipeController extends Controller
             'title'=>'required',
             'category_id'=>'required',
             'content'=>'required',
+            'gambar'=>'mimes:png,jpg,jpeg',
+
         ]);
 
         $data = Recipe::find($id);
@@ -66,24 +67,10 @@ class RecipeController extends Controller
         $data->category_id = $validate['category_id'];
         $data->content = $validate['content'];
 
-        // if (empty($validate['gambar'])){
-        //     $data->gambar = '';
-        //     $file = public_path('/image/content/').$data->gambar;
-        //     if(fileExists($file)){
-        //         @unlink($file);
-        //     }
-
-        // }else {
-        //     if(empty($data->gambar)){
-        //         $file_name = time().rand().'.'.$validate['gambar']->getClientOriginalExtension();
-        //         $validate['gambar']->move(public_path().'/image/content',$file_name);
-        //         $data->gambar = $file_name;
-        //     }else {
-        //         $file_name = $data->gambar;
-        //         $validate['gambar']->move(public_path().'/image/content',$file_name);
-        //         $data->gambar = $file_name;
-        //     }
-        // }
+        if (!empty($validate['gambar'])){
+            $file_name = $data->gambar;
+            $validate['gambar']->move(public_path().'/image/content',$file_name);
+        }
 
         $data->save();
 
@@ -94,10 +81,7 @@ class RecipeController extends Controller
     public function deleteData($id){
 
         $data = Recipe::find($id);
-        // $file = public_path('/image/content').$data->gambar;
-        // if (file_exists($file)){
-        //     @unlink($file);
-        // }
+
         $data->delete();
 
         return $this->result('Data berhasil di hapus!', $data, true);
@@ -130,10 +114,19 @@ class RecipeController extends Controller
 
     public function deleteTrash($id){
 
-        $data = Recipe::where('id',$id)->forceDelete();
+        $data = Recipe::where('id',$id)->onlyTrashed()->first();
+        // return $data->gambar;
         if(!$data){
             return $this->result('Data sudah terhapus sebelumnya!!');
         }
+
+        $file = public_path('image/content/').$data->gambar;
+        if (file_exists($file)){
+            @unlink($file);
+        }
+
+        $delete = Recipe::where('id',$id)->forceDelete();
+
         return $this->result('Data sukses dihapus!!', $data, true);
 
     }

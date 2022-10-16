@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LandingPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,9 +27,8 @@ Route::get('/logout', function () {
     return redirect('/login');
 });
 
-Route::get('/', function () {
-    return view('landingpage');
-});
+Route::get('/', [LandingPageController::class,'index'])->name('landingPage');
+Route::get('/{id}', [LandingPageController::class,'withCategory']);
 
 Route::middleware(['auth', 'checkLevel:admin,user'])->group(function () {
 
