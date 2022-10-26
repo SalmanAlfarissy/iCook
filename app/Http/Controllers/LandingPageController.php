@@ -8,22 +8,30 @@ use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
 {
-    public function index(){
-        $category = Category::get();
+    public function __construct(){
+        $this->category = Category::get();
+    }
 
-        $data = Recipe::get();
+    public function index(Request $request){
+        if($request->category_id){
+            $data = Recipe::where('category_id',$request->category_id)->get();
+        }else{
+            $data = Recipe::get();
+        }
         return view('landingpage',[
             'data'=>$data,
-            'category'=>$category
+            'category'=>$this->category
         ]);
     }
 
-    public function withCategory($id){
-        $category = Category::get();
-        $data = Recipe::where('category_id',$id)->get();
-        return view('landingpage',[
+    public function detailrecipe($id){
+        $data = Recipe::with('category')->find($id);
+        return view('detailrecipe',[
             'data'=>$data,
-            'category'=>$category
+            'category'=>$this->category,
         ]);
     }
+
+
+
 }

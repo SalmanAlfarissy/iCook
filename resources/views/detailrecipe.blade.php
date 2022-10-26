@@ -11,21 +11,19 @@
     <!-- <link rel="manifest" href="site.webmanifest"> -->
     <!-- Place favicon.ico in the root directory -->
 
-    <link rel="shortcut icon" type="image/png" href="{{ asset('admin/images/icook.png') }}">
-
     <!-- CSS here -->
-    <link rel="stylesheet" href="recipe/css/bootstrap.min.css">
-    <link rel="stylesheet" href="recipe/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="recipe/css/magnific-popup.css">
-    <link rel="stylesheet" href="recipe/css/font-awesome.min.css">
-    <link rel="stylesheet" href="recipe/css/themify-icons.css">
-    <link rel="stylesheet" href="recipe/css/nice-select.css">
-    <link rel="stylesheet" href="recipe/css/flaticon.css">
-    <link rel="stylesheet" href="recipe/css/gijgo.css">
-    <link rel="stylesheet" href="recipe/css/animate.min.css">
-    <link rel="stylesheet" href="recipe/css/slick.css">
-    <link rel="stylesheet" href="recipe/css/slicknav.css">
-    <link rel="stylesheet" href="recipe/css/style.css">
+    <link rel="stylesheet" href="{{ asset('recipe/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/themify-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/nice-select.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/flaticon.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/gijgo.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/animate.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/slicknav.css') }}">
+    <link rel="stylesheet" href="{{ asset('recipe/css/style.css') }}">
     <!-- <link rel="stylesheet" href="css/responsive.css"> -->
 </head>
 
@@ -43,7 +41,7 @@
                         <div class="col-xl-3 col-lg-2">
                             <div class="logo">
                                 <a href="index.html">
-                                    <img src="{{ asset('admin/images/icook.png') }}" alt="" width="70px" height="70px"><h3 style="color: white">iCook</h3>
+                                    <img src="img/logo.png" alt="">
                                 </a>
                             </div>
                         </div>
@@ -85,49 +83,57 @@
     </header>
     <!-- header-end -->
 
-    <!-- slider_area_start -->
-    <div class="slider_area">
-        <div class="single_slider  d-flex align-items-center slider_bg_1">
-            <div class="container">
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-xl-8 ">
-                        <div class="slider_text text-center">
-                            <div class="text">
-                                <h3>
-                                    Resep Makanan Dunia
-                                </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
-    <!-- slider_area_end -->
-    <!-- recepie_area_start  -->
-    <div class="recepie_area">
+    <!-- bradcam_area  -->
+    <div class="bradcam_area bradcam_bg_1">
         <div class="container">
             <div class="row">
-                @foreach ($data as $index=>$item)
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single_recepie text-center">
-                        <div class="recepie_thumb">
-                            <img src="{{ asset('image/content/'.$item->gambar) }}" alt="">
-                        </div>
-                        <h3>{{ $item->title }}</h3>
-                        <span>{{ $item->created_at }}</span>
-                        <p>{!! Str::substr($item->content, 0, 150) !!}</p>
-                        <a href="{{ route('detailrecipe',$item->id) }}" class="line_btn">View Full Recipe</a>
+                <div class="col-xl-12">
+                    <div class="bradcam_text text-center">
+                        <h3>Recipe Details</h3>
                     </div>
                 </div>
-                @endforeach
             </div>
         </div>
     </div>
-    <!-- /recepie_area_start  -->
+    <!-- /bradcam_area  -->
 
-    <!-- footer  -->
-    <footer class="footer">
+    <div class="recepie_details_area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-xl-6 col-md-6">
+                    <div class="recepies_thumb">
+                        <img src="{{ asset('image/content/'.$data->gambar) }}" alt="">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    <div class="recepies_info">
+                        <div class="resepies_details">
+                            <ul>
+                                <li><p><strong>Rating</strong> : <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> </p></li>
+                                <li><p><strong>Category</strong> : {{ $data->category['name'] }} </p></li>
+                                <li><p><strong>Tags</strong> :  Dinner, Main, Chicken, Dragon, Phoenix </p></li>
+                            </ul>
+                        </div>
+                        <div class="links">
+                            <a href="#"> <i class="fa fa-facebook"></i> </a>
+                            <a href="#"> <i class="fa fa-twitter"></i> </a>
+                            <a href="#"> <i class="fa fa-linkedin"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="recepies_text">
+                        <p>{!! $data->content !!}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- footer  -->
+        <footer class="footer">
             {{-- <div class="footer_top">
                 <div class="container">
                     <div class="row">
@@ -261,34 +267,33 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </script>
 
     <!-- JS here -->
-    <script src="recipe/js/vendor/modernizr-3.5.0.min.js"></script>
-    <script src="recipe/js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="recipe/js/popper.min.js"></script>
-    <script src="recipe/js/bootstrap.min.js"></script>
-    <script src="recipe/js/owl.carousel.min.js"></script>
-    <script src="recipe/js/isotope.pkgd.min.js"></script>
-    <script src="recipe/js/ajax-form.js"></script>
-    <script src="recipe/js/waypoints.min.js"></script>
-    <script src="recipe/js/jquery.counterup.min.js"></script>
-    <script src="recipe/js/imagesloaded.pkgd.min.js"></script>
-    <script src="recipe/js/scrollIt.js"></script>
-    <script src="recipe/js/jquery.scrollUp.min.js"></script>
-    <script src="recipe/js/wow.min.js"></script>
-    <script src="recipe/js/nice-select.min.js"></script>
-    <script src="recipe/js/jquery.slicknav.min.js"></script>
-    <script src="recipe/js/jquery.magnific-popup.min.js"></script>
-    <script src="recipe/js/plugins.js"></script>
-    <script src="recipe/js/gijgo.min.js"></script>
+    <script src="{{ asset('recipe/js/vendor/modernizr-3.5.0.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/vendor/jquery-1.12.4.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/popper.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/ajax-form.js') }}"></script>
+    <script src="{{ asset('recipe/js/waypoints.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/imagesloaded.pkgd.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/scrollIt.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.scrollUp.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/wow.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/nice-select.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.slicknav.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/plugins.js') }}"></script>
+    <script src="{{ asset('recipe/js/gijgo.min.js') }}"></script>
 
     <!--contact js-->
-    <script src="recipe/js/contact.js"></script>
-    <script src="recipe/js/jquery.ajaxchimp.min.js"></script>
-    <script src="recipe/js/jquery.form.js"></script>
-    <script src="recipe/js/jquery.validate.min.js"></script>
-    <script src="recipe/js/mail-script.js"></script>
+    <script src="{{ asset('recipe/js/contact.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.ajaxchimp.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.form.js') }}"></script>
+    <script src="{{ asset('recipe/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('recipe/js/mail-script.js') }}"></script>
 
-    <script src="recipe/js/main.js"></script>
-
+    <script src="{{ asset('recipe/js/main.js') }}"></script>
 </body>
 
 </html>

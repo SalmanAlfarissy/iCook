@@ -28,7 +28,7 @@ Route::get('/logout', function () {
 });
 
 Route::get('/', [LandingPageController::class,'index'])->name('landingPage');
-Route::get('/{id}', [LandingPageController::class,'withCategory']);
+Route::get('detailrecipe/{id}', [LandingPageController::class,'detailrecipe'])->name('detailrecipe');
 
 Route::middleware(['auth', 'checkLevel:admin,user'])->group(function () {
 

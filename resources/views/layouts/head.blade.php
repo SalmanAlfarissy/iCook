@@ -26,7 +26,7 @@
     <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
 
     {{-- tinymce --}}
-    <script src="https://cdn.tiny.cloud/1/ckyexf3v4i6jr72fk41y7vnazkr75xunzcru1czq5189sxew/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="{{ asset('admin/js/tinymce.min.js') }}" referrerpolicy="origin"></script>
 
 
 
